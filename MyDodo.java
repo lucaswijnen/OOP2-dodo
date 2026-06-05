@@ -2,6 +2,9 @@ import greenfoot.*;
 
 public class MyDodo extends Dodo
 {
+    /**
+     * @author lucas
+     */
     private int myNrOfEggsHatched;
 
     public MyDodo() {
