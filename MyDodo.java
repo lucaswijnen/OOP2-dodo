@@ -231,6 +231,103 @@ public class MyDodo extends Dodo
         showCompliment("je aantal eieren in deze rij: " + aantalEieren);
         return aantalEieren;
     }
-    
 
+    public void layTrailOfEggs(int n) {
+        if (n <= 0) {
+            showError("Voer een getal groter dan 0 in");
+            return;
+        }
+        int aantalGelegd = 0;
+        while (aantalGelegd < n) {
+            layEgg();
+            aantalGelegd = aantalGelegd + 1;
+            if (aantalGelegd < n) {
+                move();
+            }
+        }
+    }
+
+    public boolean validCoordinates(int x, int y) {
+        if (x < 0 || x >= getWorld().getWidth()) {
+            showError("Invalid coordinates");
+            return false;
+        }
+        if (y < 0 || y >= getWorld().getHeight()) {
+            showError("Invalid coordinates");
+            return false;
+        }
+        return true;
+    }
+
+    public void goToLocation(int coordX, int coordY) {
+        if (!validCoordinates(coordX, coordY)) {
+            return;
+        }
+        while (getX() != coordX) {
+            if (getX() < coordX) {
+                setDirection(EAST);
+            } else {
+                setDirection(WEST);
+            }
+            move();
+        }
+        while (getY() != coordY) {
+            if (getY() < coordY) {
+                setDirection(SOUTH);
+            } else {
+                setDirection(NORTH);
+            }
+            move();
+        }
+    }
+
+    public int countAllEggs() {
+        int totaal = 0;
+        int rij = 0;
+        while (rij < getWorld().getHeight()) {
+            goToLocation(0, rij);
+            faceEast();
+            totaal = totaal + countEggsInRow();
+            rij = rij + 1;
+        }
+        goToLocation(0, 0);
+        faceEast();
+        System.out.println("Totaal aantal eieren: " + totaal);
+        return totaal;
+    }
+
+    public void findRowWithMostEggs() {
+        int besteRij = 0;
+        int meeste = 0;
+        int rij = 0;
+        while (rij < getWorld().getHeight()) {
+            goToLocation(0, rij);
+            faceEast();
+            int aantal = countEggsInRow();
+            if (aantal > meeste) {
+                meeste = aantal;
+                besteRij = rij;
+            }
+            rij = rij + 1;
+        }
+        goToLocation(0, 0);
+        faceEast();
+        System.out.println("Rij met de meeste eieren: " + besteRij);
+    }
+
+    public double averageEggsPerRow() {
+        int totaal = 0;
+        int rij = 0;
+        while (rij < getWorld().getHeight()) {
+            goToLocation(0, rij);
+            faceEast();
+            totaal = totaal + countEggsInRow();
+            rij = rij + 1;
+        }
+        goToLocation(0, 0);
+        faceEast();
+        double gemiddelde = (double) totaal / getWorld().getHeight();
+        System.out.println("Gemiddeld aantal eieren per rij: " + gemiddelde);
+        return gemiddelde;
+    }
 }
